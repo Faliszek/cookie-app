@@ -14,7 +14,7 @@ export const NoSsr = () => {
   const handleButtonClick = () => {
     const newValue =
       cookieValue === "persisted" ? "not-persisted" : "persisted";
-    Cookies.set(COOKIE_KEY, newValue);
+    Cookies.set(COOKIE_KEY, newValue, { expires: 7 });
     setCookieValue(newValue);
   };
 
@@ -27,7 +27,7 @@ export const NoSsr = () => {
   return (
     <div className="flex flex-col items-center justify-center p-4 min-h-screen gap-8">
       <h1 className="text-center text-xl font-medium">
-        This app persist cookie once you click a button (1.0.0)
+        This app persist cookie once you click a button (1.0.1)
       </h1>
       <div className="font-light">
         <strong>Cookie: </strong> {cookieValue}
