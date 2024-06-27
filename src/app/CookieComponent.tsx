@@ -20,7 +20,11 @@ const CookieComponent = () => {
         ? CookiePersistance.NotPersisted
         : CookiePersistance.Persisted;
 
-    Cookies.set(COOKIE_KEY, newValue, { expires: 7, sameSite: "Lax" });
+    Cookies.set(COOKIE_KEY, newValue, {
+      expires: 7,
+      sameSite: "Strict",
+      secure: true,
+    });
     setCookieValue(newValue);
   };
 
@@ -33,25 +37,23 @@ const CookieComponent = () => {
   return (
     <div className="flex flex-col items-center justify-center p-4 min-h-screen gap-8">
       <h1 className="text-center text-xl font-medium">
-        This app persist cookie once you click a button (1.0.2)
+        This app persist cookie once you click a button (1.0.6)
       </h1>
       <div className="font-light">
         <strong>Cookie: </strong> {cookieValue}
       </div>
 
       <div className="min-h-12">
-        {cookieValue ? (
-          <button
-            onClick={handleButtonClick}
-            className={`rounded-lg min-w-32 ${
-              cookieValue === CookiePersistance.Persisted
-                ? "bg-red-500"
-                : "bg-green-500"
-            } px-4 py-2 transition-all duration-200 ease-linear text-white`}
-          >
-            {cookieValue === CookiePersistance.Persisted ? "Remove" : "Save"}
-          </button>
-        ) : null}
+        <button
+          onClick={handleButtonClick}
+          className={`rounded-lg min-w-32 ${
+            cookieValue === CookiePersistance.Persisted
+              ? "bg-red-500"
+              : "bg-green-500"
+          } px-4 py-2 transition-all duration-200 ease-linear text-white`}
+        >
+          {cookieValue === CookiePersistance.Persisted ? "Remove" : "Save"}
+        </button>
       </div>
     </div>
   );
