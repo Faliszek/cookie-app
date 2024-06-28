@@ -3,12 +3,25 @@
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 
+export interface WindowWithWebview extends Window {
+  ReactNativeWebView?: {
+    postMessage(msg: string): void;
+    isZnd?: boolean;
+  };
+}
+
+const sendCookieMessage = (value: CookiePersistance | null) => {
+  const message = JSON.stringify({ type: "cookie", value });
+  (window as WindowWithWebview).ReactNativeWebView?.postMessage(message);
+};
+
 const COOKIE_KEY = "myCookie";
 
 enum CookiePersistance {
   Persisted = "Persisted",
   NotPersisted = "NotPersisted",
 }
+
 const CookieComponent = () => {
   const [cookieValue, setCookieValue] = useState<CookiePersistance | null>(
     null
@@ -26,18 +39,21 @@ const CookieComponent = () => {
       secure: true,
     });
     setCookieValue(newValue);
+    sendCookieMessage(newValue);
   };
 
   useEffect(() => {
-    const currentCookie = Cookies.get(COOKIE_KEY) as CookiePersistance;
-    window.postMessage({ currentCookie });
-    setCookieValue(currentCookie ?? null);
+    const currentCookie =
+      (Cookies.get(COOKIE_KEY) as CookiePersistance) ?? null;
+
+    setCookieValue(currentCookie);
+    sendCookieMessage(currentCookie);
   }, []);
 
   return (
     <div className="flex flex-col items-center justify-center p-4 min-h-screen gap-8">
       <h1 className="text-center text-xl font-medium">
-        This app persist cookie once you click a button (1.0.6)
+        This app persist cookie once you click a button (1.0.9)
       </h1>
       <div className="font-light">
         <strong>Cookie: </strong> {cookieValue}
